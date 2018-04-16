@@ -44,7 +44,7 @@ const uploadForm = Vue.component('upload-form', {
     <form @submit.prevent="uploadPhoto" id="uploadForm">
         <div class="form-group">
         <label>Description</label>
-        <input type="text" class="form-control" name="description">
+        <textarea class="form-control" rows="5" id="description" name="description"></textarea>
       </div>
         <input type="file" class="form-control-file" name="photo"><br>
         <button type="submit" class="btn btn-primary mb-2">Upload</button>
