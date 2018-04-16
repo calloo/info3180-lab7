@@ -24,7 +24,7 @@ def upload():
         description = form.description.data
         filename = secure_filename(f.filename)
         f.save(os.path.join(
-            app.instance_path, 'photos', filename
+            app.config['UPLOADED_IMAGES_DEST'], filename
         ))
         return jsonify({
             "message": "File Upload Successful",
