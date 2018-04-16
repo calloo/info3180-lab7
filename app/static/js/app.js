@@ -32,16 +32,37 @@ Vue.component('app-footer', {
 });
 const uploadForm = Vue.component('upload-form', {
     template: `
+    <div>
+    <div class="alert alert-primary" role="alert" v-if="message">
+      Upload was successful
+    </div>
+    <div class="alert alert-danger" role="alert" v-if="error">
+      <ul>
+        <li v-for="err in errors">{{err}}</li>
+      </ul>
+    </div>
     <form @submit.prevent="uploadPhoto" id="uploadForm">
-        <input type="text" name="description" placeholder="description">
-        <input type="file" name="photo">
-        <input type="submit" value="Upload">
+        <div class="form-group">
+        <label>Description</label>
+        <input type="text" class="form-control" name="description">
+      </div>
+        <input type="file" class="form-control-file" name="photo"><br>
+        <button type="submit" class="btn btn-primary mb-2">Upload</button>
     </form>
+    </div>
     `,
+    data: function(){
+        return {
+            message: false,
+            error: false,
+            errors: []
+        }
+    },
     methods: {
-        uploadPhoto: function(){
+        uploadPhoto(){
             let uploadForm = document.getElementById('uploadForm');
             let form_data = new FormData(uploadForm); 
+            let self = this;
         fetch("/api/upload", {
          method: 'POST',
          body: form_data,
@@ -54,11 +75,17 @@ const uploadForm = Vue.component('upload-form', {
          return response.json();
          })
          .then(function (jsonResponse) {
-         
-         console.log(jsonResponse);
+            if (jsonResponse.errors){
+                self.errors = jsonResponse.errors;
+                self.error = true;
+                self.message = false;
+            }else{
+                self.message = true;
+                self.error = false;
+            }
          })
          .catch(function (error) {
-         console.log(error);
+            console.log(error);
          });
     }
     }
